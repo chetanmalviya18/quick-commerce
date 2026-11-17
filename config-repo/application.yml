@@ -2,7 +2,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-app:
-  jwt:
-    secret: ${JWT_SECRET:dev-secret-change-me-dev-secret-change-me-1234}
-    expiry-minutes: 60
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

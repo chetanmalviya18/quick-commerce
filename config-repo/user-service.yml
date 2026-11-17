@@ -6,5 +6,17 @@ spring:
     username: root
     password: 0000
   jpa:
+    open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+app:
+  jwt:
+    issuer: quickcommerce-user-service
+    access-token-minutes: 15
+    refresh-token-days: 7
+    private-key-location: ${JWT_PRIVATE_KEY_LOCATION:}
+    public-key-location: ${JWT_PUBLIC_KEY_LOCATION:}

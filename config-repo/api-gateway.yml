@@ -1,6 +1,14 @@
 server:
   port: 8080
+app:
+  cors:
+    allowed-origins: http://localhost:5173
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/.well-known/jwks.json
   cloud:
     gateway:
       server:
@@ -9,10 +17,4 @@ spring:
             - id: user-service
               uri: lb://user-service
               predicates:
-                - Path=/api/auth/**, /api/users/**
-          globalcors:
-            cors-configurations:
-              '[/**]':
-                allowedOrigins: "http://localhost:5173"
-                allowedMethods: "*"
-                allowedHeaders: "*"
+                - Path=/api/v1/auth/**, /api/v1/users/**
