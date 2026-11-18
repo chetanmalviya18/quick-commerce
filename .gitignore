@@ -86,11 +86,9 @@ release.properties
 
 # Environment
 !.env.example
+keys/
 
 # Dependency caches
 **/node_modules/
 **/coverage/
 **/dist/
-
-### Private and Public keys ###
-keys/

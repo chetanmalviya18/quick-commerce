@@ -21,7 +21,6 @@ public class TokenService {
     private final String issuer;
     private final long accessMinutes;
 
-
     public TokenService(JwtEncoder jwtEncoder, Clock clock,
                         @Value("${app.jwt.issuer}") String issuer,
                         @Value("${app.jwt.access-token-minutes}") long accessMinutes) {
