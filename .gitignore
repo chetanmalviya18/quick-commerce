@@ -91,3 +91,6 @@ release.properties
 **/node_modules/
 **/coverage/
 **/dist/
+
+### Private and Public keys ###
+keys/
