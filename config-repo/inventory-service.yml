@@ -22,3 +22,20 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8081/.well-known/jwks.json
+logging:
+  file:
+    name: logs/user-service.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+    root: WARN
+    com.quickcommerce: INFO
+    com.netflix: WARN
+    org.springframework: WARN
+    org.hibernate: WARN
+    org.apache.catalina: WARN
+    com.zaxxer.hikari: WARN
