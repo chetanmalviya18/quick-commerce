@@ -33,4 +33,14 @@ public class ProductRepositoryTest {
                 () -> products.saveAndFlush(new Product("MILK-1L", "Other", 100, 1)));
     }
 
+    @Test
+    void decrementOnHandNeverGoesBelowZero() {
+        Long id = products.save(new Product("RICE-1KG", "Rice 1kg", 9000, 5)).getId();
+
+        assertEquals(1, products.decrementOnHand(id, 3));
+        assertEquals(2, products.findById(id).orElseThrow().getOnHand());
+
+        assertEquals(0, products.decrementOnHand(id, 3));
+        assertEquals(2, products.findById(id).orElseThrow().getOnHand());
+    }
 }
