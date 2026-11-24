@@ -1,5 +1,9 @@
 server:
   port: 8082
+app:
+  inventory:
+    hold-minutes: 10
+    sweep-interval-ms: 30000
 spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/quickcommerce_inventory_db}

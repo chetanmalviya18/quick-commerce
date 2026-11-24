@@ -28,7 +28,9 @@ import org.springframework.test.web.servlet.MvcResult;
         "spring.datasource.username=sa",
         "spring.datasource.password=",
         "spring.flyway.enabled=true",
-        "spring.jpa.hibernate.ddl-auto=validate"
+        "spring.jpa.hibernate.ddl-auto=validate",
+        "app.inventory.hold-minutes=10",
+        "app.inventory.sweep-interval-ms=3600000"
 })
 @AutoConfigureMockMvc
 class InventoryIntegrationTest {
