@@ -40,8 +40,12 @@ class ProductControllerTest {
     private static final ProductResponse MILK = new ProductResponse(1L, "MILK-1L", "Milk 1L", 6500, 40);
 
     @Test
-    void listWithoutATokenReturns401() throws Exception {
-        mvc.perform(get("/api/v1/products")).andExpect(status().isUnauthorized());
+    void guestCanListProductsWithoutToken() throws Exception {
+        when(service.list()).thenReturn(List.of(MILK));
+        mvc.perform(get("/api/v1/products"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].sku").value("MILK-1L"))
+                .andExpect(jsonPath("$[0].available").value(40));
     }
 
     @Test
