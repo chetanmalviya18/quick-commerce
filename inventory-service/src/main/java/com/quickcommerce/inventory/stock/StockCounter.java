@@ -1,5 +1,6 @@
 package com.quickcommerce.inventory.stock;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface StockCounter {
@@ -11,4 +12,10 @@ public interface StockCounter {
 
     /** Sets the counter only if none exists yet. Used for warm-up. */
     void initializeIfAbsent(long productId, int available);
+
+    /** Subtracts every quantity in one atomic step, or changes nothing. Returns false if any product is short. */
+    boolean tryReserve(Map<Long, Integer> quantities);
+
+    /** Adds the quantities back. */
+    void release(Map<Long, Integer> quantities);
 }
