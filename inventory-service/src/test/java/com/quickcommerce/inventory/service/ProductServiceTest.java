@@ -21,7 +21,8 @@ import static org.mockito.Mockito.*;
 public class ProductServiceTest {
     private final ProductRepository products = mock(ProductRepository.class);
     private final StockCounter counter = mock(StockCounter.class);
-    private final ProductService service = new ProductService(products, counter);
+    private final StockAvailability availability = mock(StockAvailability.class);
+    private final ProductService service = new ProductService(products, counter, availability);
 
     private Product product(long id, String sku, int onHand) {
         Product p = new Product(sku, "Name " + sku, 5000, onHand);
@@ -62,8 +63,10 @@ public class ProductServiceTest {
 
     @Test
     void getRebuildsAMissingCounterFromTheDatabase() {
-        when(products.findById(3L)).thenReturn(Optional.of(product(3L, "MILK-1L", 40)));
+        Product p = product(3L, "MILK-1L", 40);
+        when(products.findById(3L)).thenReturn(Optional.of(p));
         when(counter.get(3L)).thenReturn(Optional.empty());
+        when(availability.availableFor(p)).thenReturn(40);
 
         assertEquals(40, service.get(3L).available());
         verify(counter).initializeIfAbsent(3L, 40);
@@ -91,11 +94,18 @@ public class ProductServiceTest {
     void setStockUpdatesTheDatabaseAndTheCounter() {
         Product p = product(3L, "MILK-1L", 40);
         when(products.findById(3L)).thenReturn(Optional.of(p));
+        when(availability.availableFor(p)).thenReturn(8);
 
         ProductResponse res = service.setStock(3L, 10);
 
         assertEquals(10, p.getOnHand());
-        verify(counter).set(3L, 10);
-        assertEquals(10, res.available());
+        verify(counter).set(3L, 8);
+        assertEquals(8, res.available());
+    }
+
+    @Test
+    void setStockRejectsNegativeQuantity() {
+        assertThrows(IllegalArgumentException.class, () -> service.setStock(3L, -1));
+        verifyNoInteractions(products, counter, availability);
     }
 }

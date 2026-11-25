@@ -20,6 +20,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     private final StockCounter stockCounter;
+    private final StockAvailability stockAvailability;
 
     @Transactional
     public ProductResponse create(CreateProductRequest req) {
@@ -52,15 +53,17 @@ public class ProductService {
         }
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
         product.changeStock(quantity);
-        stockCounter.set(id, quantity);
-        log.info("Stock set: product id={}, quantity={}", id, quantity);
-        return toResponse(product, quantity);
+        int available = stockAvailability.availableFor(product);
+        stockCounter.set(id, available);
+        log.info("Stock set: product id={}, on hand={}, available={}", id, quantity, available);
+        return toResponse(product, available);
     }
 
     private int available(Product product) {
         return stockCounter.get(product.getId()).orElseGet(() -> {
-            stockCounter.initializeIfAbsent(product.getId(), product.getOnHand());
-             return product.getOnHand();
+            int available = stockAvailability.availableFor(product);
+            stockCounter.initializeIfAbsent(product.getId(), available);
+             return available;
         });
     }
 

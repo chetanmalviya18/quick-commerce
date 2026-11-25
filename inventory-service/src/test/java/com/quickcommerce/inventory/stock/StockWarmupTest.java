@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 
 import com.quickcommerce.inventory.model.Product;
 import com.quickcommerce.inventory.repository.ProductRepository;
+import com.quickcommerce.inventory.service.StockAvailability;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.ApplicationArguments;
@@ -17,14 +18,19 @@ class StockWarmupTest {
     }
 
     @Test
-    void createsACounterForEveryProductWithoutOverwritingLiveOnes() throws Exception {
+    void rebuildsMissingCountersFromTheAvailableFigureWithoutOverwritingLiveOnes() throws Exception {
         ProductRepository products = mock(ProductRepository.class);
         StockCounter counter = mock(StockCounter.class);
-        when(products.findAllByActiveTrue()).thenReturn(List.of(product(1L, 40), product(2L, 0)));
+        StockAvailability availability = mock(StockAvailability.class);
+        Product milk = product(1L, 40);
+        Product rice = product(2L, 10);
+        when(products.findAllByActiveTrue()).thenReturn(List.of(milk, rice));
+        when(availability.availableFor(milk)).thenReturn(35);
+        when(availability.availableFor(rice)).thenReturn(0);
 
-        new StockWarmup(products, counter).run(mock(ApplicationArguments.class));
+        new StockWarmup(products, counter, availability).run(mock(ApplicationArguments.class));
 
-        verify(counter).initializeIfAbsent(1L, 40);
+        verify(counter).initializeIfAbsent(1L, 35);
         verify(counter).initializeIfAbsent(2L, 0);
         verify(counter, never()).set(anyLong(), anyInt());
     }
