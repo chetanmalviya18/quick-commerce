@@ -54,7 +54,7 @@ public class ReservationService {
         }
 
         Map<Long, Integer> quantities = merge(request.items());
-        List<Product> foundProduct = productRepository.findAllById(quantities.keySet());
+        List<Product> foundProduct = productRepository.findAllByIdInAndActiveTrue(quantities.keySet());
         if(foundProduct.size() != quantities.size() || foundProduct.stream().anyMatch(p -> !p.isActive())) {
             throw new ProductNotFoundException();
         }

@@ -59,7 +59,7 @@ class ReservationServiceTest {
     @Test
     void reserveCreatesAHeldReservationThatExpiresAfterTheHoldTime() {
         when(reservations.findByOrderId("order-1")).thenReturn(Optional.empty());
-        when(products.findAllById(any())).thenReturn(List.of(product(1L), product(2L)));
+        when(products.findAllByIdInAndActiveTrue(any())).thenReturn(List.of(product(1L), product(2L)));
         when(counter.tryReserve(any())).thenReturn(true);
         when(reservations.saveAndFlush(any(Reservation.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -77,7 +77,7 @@ class ReservationServiceTest {
     @Test
     void reserveMergesTheSameProductListedTwice() {
         when(reservations.findByOrderId("order-1")).thenReturn(Optional.empty());
-        when(products.findAllById(any())).thenReturn(List.of(product(1L)));
+        when(products.findAllByIdInAndActiveTrue(any())).thenReturn(List.of(product(1L)));
         when(counter.tryReserve(any())).thenReturn(true);
         when(reservations.saveAndFlush(any(Reservation.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -101,7 +101,7 @@ class ReservationServiceTest {
     @Test
     void reserveIsRefusedWhenThereIsNotEnoughStock() {
         when(reservations.findByOrderId("order-1")).thenReturn(Optional.empty());
-        when(products.findAllById(any())).thenReturn(List.of(product(1L)));
+        when(products.findAllByIdInAndActiveTrue(any())).thenReturn(List.of(product(1L)));
         when(counter.tryReserve(any())).thenReturn(false);
 
         assertThrows(InsufficientStockException.class,
@@ -112,7 +112,7 @@ class ReservationServiceTest {
     @Test
     void reserveIsRefusedForAnUnknownProduct() {
         when(reservations.findByOrderId("order-1")).thenReturn(Optional.empty());
-        when(products.findAllById(any())).thenReturn(List.of());
+        when(products.findAllByIdInAndActiveTrue(any())).thenReturn(List.of());
 
         assertThrows(ProductNotFoundException.class,
                 () -> service.reserve(new ReserveRequest("order-1", List.of(new ReserveItem(7L, 1)))));
@@ -122,7 +122,7 @@ class ReservationServiceTest {
     @Test
     void reserveReturnsTheStockToRedisWhenTheDatabaseFails() {
         when(reservations.findByOrderId("order-1")).thenReturn(Optional.empty());
-        when(products.findAllById(any())).thenReturn(List.of(product(1L)));
+        when(products.findAllByIdInAndActiveTrue(any())).thenReturn(List.of(product(1L)));
         when(counter.tryReserve(any())).thenReturn(true);
         when(reservations.saveAndFlush(any(Reservation.class))).thenThrow(new RuntimeException("db down"));
 
@@ -134,7 +134,7 @@ class ReservationServiceTest {
     @Test
     void reserveTurnsARaceOnTheSameOrderIntoAConflictAndReturnsTheStock() {
         when(reservations.findByOrderId("order-1")).thenReturn(Optional.empty());
-        when(products.findAllById(any())).thenReturn(List.of(product(1L)));
+        when(products.findAllByIdInAndActiveTrue(any())).thenReturn(List.of(product(1L)));
         when(counter.tryReserve(any())).thenReturn(true);
         when(reservations.saveAndFlush(any(Reservation.class))).thenThrow(new DataIntegrityViolationException("duplicate"));
 

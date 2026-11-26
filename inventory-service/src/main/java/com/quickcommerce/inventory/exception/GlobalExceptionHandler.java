@@ -39,15 +39,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
+    @ExceptionHandler({ProductNotFoundException.class, ReservationNotFoundException.class})
     public ResponseEntity<ErrorResponse> handleNotFound(
-            ProductNotFoundException ex, HttpServletRequest request) {
+            RuntimeException ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
-    @ExceptionHandler(SkuAlreadyExistsException.class)
+    @ExceptionHandler({SkuAlreadyExistsException.class, InsufficientStockException.class, DuplicateReservationException.class, ReservationNotActiveException.class})
     public ResponseEntity<ErrorResponse> handleConflict(
-            SkuAlreadyExistsException ex, HttpServletRequest request) {
+            RuntimeException ex, HttpServletRequest request) {
         return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 

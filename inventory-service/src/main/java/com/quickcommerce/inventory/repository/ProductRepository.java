@@ -15,7 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findBySku(String sku);
     boolean existsBySku(String sku);
     List<Product> findAllByActiveTrue();
-    List<Product> findAllByIdAndActiveTrue(Set<Long> id);
+    List<Product> findAllByIdInAndActiveTrue(Set<Long> id);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update Product p set p.onHand = p.onHand - :quantity where p.id = :id and p.onHand >= :quantity")
