@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findBySku(String sku);
     boolean existsBySku(String sku);
     List<Product> findAllByActiveTrue();
+    List<Product> findAllByIdAndActiveTrue(Set<Long> id);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("update Product p set p.onHand = p.onHand - :quantity where p.id = :id and p.onHand >= :quantity")
