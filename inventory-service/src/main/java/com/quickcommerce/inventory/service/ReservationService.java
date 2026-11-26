@@ -99,6 +99,7 @@ public class ReservationService {
             }
         }
         reservation.confirm(clock.instant());
+        reservationRepository.saveAndFlush(reservation);
         log.info("Reservation confirmed for order {}", orderId);
         return toResponse(reservation);
     }
