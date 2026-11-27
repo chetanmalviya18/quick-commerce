@@ -1,0 +1,39 @@
+server:
+  port: 8083
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/quickcommerce_order_db}
+    username: ${DB_USERNAME:root}
+    password: "${DB_PASSWORD:0000}"
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/.well-known/jwks.json
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 2000
+            read-timeout: 3000
+app:
+  service-account:
+    email: ${SERVICE_ACCOUNT_EMAIL:order-service@internal.local}
+    password: ${SERVICE_ACCOUNT_PASSWORD:service123}
+  cart:
+    max-quantity-per-item: 20
+    max-items: 50
+    ttl-days: 7
