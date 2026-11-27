@@ -1,3 +1,3 @@
 package com.quickcommerce.user.model;
 
-public enum Role { CUSTOMER, RIDER, ADMIN }
+public enum Role { CUSTOMER, RIDER, ADMIN, SERVICE }

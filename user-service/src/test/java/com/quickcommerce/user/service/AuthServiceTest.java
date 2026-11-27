@@ -139,4 +139,10 @@ class AuthServiceTest {
         service.logout(new RefreshRequest("some-token"));
         verify(refresh).revoke("some-token");
     }
+
+    @Test
+    void registerRejectsServiceRole() {
+        assertThrows(InvalidRoleException.class,
+                () -> service.register(new RegisterRequest("svc@b.com", "password123", Role.SERVICE)));
+    }
 }

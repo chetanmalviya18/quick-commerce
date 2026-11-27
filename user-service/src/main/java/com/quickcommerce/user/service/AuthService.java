@@ -30,8 +30,8 @@ public class AuthService {
     public TokenResponse register(RegisterRequest req) {
         Role role = req.role() == null ? Role.CUSTOMER : req.role();
 
-        if (role == Role.ADMIN) {
-            log.warn("Registration refused: ADMIN role requested");
+        if (role == Role.ADMIN || role == Role.SERVICE) {
+            log.warn("Registration refused: privileged role requested");
             throw new InvalidRoleException();
         }
         if(users.existsByEmail(req.email())){
