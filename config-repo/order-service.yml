@@ -33,6 +33,10 @@ app:
   service-account:
     email: ${SERVICE_ACCOUNT_EMAIL:order-service@internal.local}
     password: ${SERVICE_ACCOUNT_PASSWORD:service123}
+  order:
+    delivery-fee-paise: 2500
+    sweep-interval-ms: 30000
+    stale-created-minutes: 2
   cart:
     max-quantity-per-item: 20
     max-items: 50

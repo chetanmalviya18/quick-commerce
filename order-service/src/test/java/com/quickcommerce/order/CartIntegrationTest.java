@@ -39,7 +39,10 @@ import org.springframework.test.web.servlet.MockMvc;
         "app.service-account.password=secret",
         "app.cart.max-quantity-per-item=20",
         "app.cart.max-items=50",
-        "app.cart.ttl-days=7"
+        "app.cart.ttl-days=7",
+        "app.order.delivery-fee-paise=2500",
+        "app.order.sweep-interval-ms=3600000",
+        "app.order.stale-created-minutes=2"
 })
 @AutoConfigureMockMvc
 class CartIntegrationTest {
